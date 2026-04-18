@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+enum KYCStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+enum ConsentStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+  PAUSED
+}
+
+// ============================================================================
+// Models
+// ============================================================================
+
+model User {
+  id            String   @id @default(uuid())
+  aadhaarHash   String   @unique
+  walletAddress String   @unique
+  phoneNumber   String   @unique
+  kycStatus     KYCStatus @default(PENDING)
+  refreshTokenHash String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  creditScore    CreditScore?
+  dataConsents   DataConsent[]
+  behaviorTokens BehaviorToken[]
+
+  @@index([walletAddress])
+  @@index([kycStatus])
+}
+
+model CreditScore {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score          Int      // 300-900
+  offChainWeight Float    // 0-1
+  onChainWeight  Float    // 0-1
+  scoreHash      String   // keccak256 hash stored on-chain
+  txHash         String?  // Polygon transaction hash
+  computedAt     DateTime @default(now())
+  expiresAt      DateTime
+  breakdown      Json     // ScoreBreakdown object
+  confidence     Float    @default(0)
+  recommendation String   @default("REVIEW") // APPROVE / REVIEW / DECLINE
+  dataCompleteness Float  @default(0)
+
+  @@index([userId, computedAt])
+}
+
+model DataConsent {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aaHandle    String
+  consentId   String        @unique
+  dataTypes   Json          @default("[]")
+  fiTypes     Json          @default("[]")
+  status      ConsentStatus @default(ACTIVE)
+  grantedAt   DateTime      @default(now())
+  expiresAt   DateTime
+
+  @@index([userId, status])
+  @@index([consentId])
+}
+
+model BehaviorToken {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action        String   // "ONTIME_REPAYMENT", "CONSISTENT_SAVINGS", etc.
+  tokensAwarded Int
+  txHash        String
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+model LenderAPIKey {
+  id          String   @id @default(uuid())
+  lenderName  String
+  apiKey      String   @unique
+  permissions Json     @default("[]") // ["SCORE_READ", "ZK_VERIFY"]
+  isActive    Boolean  @default(true)
+  rateLimit   Int      @default(100) // requests per minute
+  lastUsedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([apiKey])
+}
+
+model ScoreHistory {
+  id             String   @id @default(uuid())
+  userId         String
+  score          Int
+  scoreHash      String
+  txHash         String?
+  breakdown      Json
+  confidence     Float
+  recommendation String
+  computedAt     DateTime @default(now())
+
+  @@index([userId, computedAt])
+}

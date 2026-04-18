@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TrustLedger Dark Neon Web3 Theme
+   ============================================================ */
+
+:root {
+  /* Core palette */
+  --tl-bg-deep: #0A0E1A;
+  --tl-bg-surface: #111827;
+  --tl-bg-card: #1A1F2E;
+  --tl-bg-elevated: #242937;
+
+  /* Neon accents */
+  --tl-neon-cyan: #00F0FF;
+  --tl-neon-purple: #8B5CF6;
+  --tl-neon-green: #00FF88;
+  --tl-neon-pink: #FF006E;
+  --tl-neon-orange: #FF8800;
+
+  /* Text */
+  --tl-text-primary: #F1F5F9;
+  --tl-text-secondary: #94A3B8;
+  --tl-text-muted: #64748B;
+
+  /* Borders */
+  --tl-border: #1E293B;
+  --tl-border-hover: #334155;
+
+  /* Gradients */
+  --tl-gradient-primary: linear-gradient(135deg, #00F0FF, #8B5CF6);
+  --tl-gradient-score: linear-gradient(135deg, #00FF88, #00F0FF, #8B5CF6);
+  --tl-gradient-hero: linear-gradient(180deg, #0A0E1A 0%, #0F172A 50%, #0A0E1A 100%);
+
+  /* Glow effects */
+  --tl-glow-cyan: 0 0 20px rgba(0, 240, 255, 0.3), 0 0 60px rgba(0, 240, 255, 0.1);
+  --tl-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1);
+  --tl-glow-green: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.1);
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@theme inline {
+  --color-tl-deep: var(--tl-bg-deep);
+  --color-tl-surface: var(--tl-bg-surface);
+  --color-tl-card: var(--tl-bg-card);
+  --color-tl-elevated: var(--tl-bg-elevated);
+  --color-tl-cyan: var(--tl-neon-cyan);
+  --color-tl-purple: var(--tl-neon-purple);
+  --color-tl-green: var(--tl-neon-green);
+  --color-tl-pink: var(--tl-neon-pink);
+  --color-tl-orange: var(--tl-neon-orange);
+  --color-tl-text: var(--tl-text-primary);
+  --color-tl-text-secondary: var(--tl-text-secondary);
+  --color-tl-text-muted: var(--tl-text-muted);
+  --color-tl-border: var(--tl-border);
+  --color-tl-border-hover: var(--tl-border-hover);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+
+body {
+  background-color: var(--tl-bg-deep);
+  color: var(--tl-text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--tl-bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--tl-border-hover);
+  border-radius: 3px;
+}
+
+/* ============================================================
+   Glass morphism utility
+   ============================================================ */
+
+.glass {
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(26, 31, 46, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+}
+
+/* ============================================================
+   Neon glow utilities
+   ============================================================ */
+
+.glow-cyan { box-shadow: var(--tl-glow-cyan); }
+.glow-purple { box-shadow: var(--tl-glow-purple); }
+.glow-green { box-shadow: var(--tl-glow-green); }
+
+.text-glow-cyan { text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2); }
+.text-glow-purple { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.2); }
+.text-glow-green { text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.2); }
+
+/* ============================================================
+   Gradient text
+   ============================================================ */
+
+.gradient-text {
+  background: var(--tl-gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-score {
+  background: var(--tl-gradient-score);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes grid-fade {
+  0%, 100% { opacity: 0.03; }
+  50% { opacity: 0.06; }
+}
+
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ============================================================
+   Grid background pattern
+   ============================================================ */
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-fade 8s ease-in-out infinite;
+}

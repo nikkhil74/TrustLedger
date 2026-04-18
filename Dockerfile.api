@@ -1,0 +1,56 @@
+# ============================================================
+# Dockerfile.api — Fastify API + Worker
+# Multi-stage build for the pnpm monorepo
+# ============================================================
+
+FROM node:20-alpine AS base
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+WORKDIR /app
+
+# --- Dependencies stage ---
+FROM base AS deps
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
+COPY packages/shared/package.json packages/shared/package.json
+COPY packages/db/package.json packages/db/package.json
+COPY packages/zk/package.json packages/zk/package.json
+COPY apps/api/package.json apps/api/package.json
+RUN pnpm install --frozen-lockfile --prod=false
+
+# --- Build stage ---
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
+COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
+COPY --from=deps /app/packages/zk/node_modules ./packages/zk/node_modules
+COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc tsconfig.base.json ./
+COPY packages/shared packages/shared
+COPY packages/db packages/db
+COPY packages/zk packages/zk
+COPY apps/api apps/api
+
+# Generate Prisma client
+RUN pnpm --filter @trustledger/db exec prisma generate
+
+# Build all packages
+RUN pnpm --filter @trustledger/shared run build || true
+RUN pnpm --filter @trustledger/api run build || true
+
+# --- Production stage ---
+FROM node:20-alpine AS production
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/apps/api ./apps/api
+COPY --from=build /app/tsconfig.base.json ./tsconfig.base.json
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+EXPOSE 4000
+
+CMD ["node", "--import", "tsx", "apps/api/src/index.ts"]
