@@ -44,13 +44,20 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Copy everything from build (includes all node_modules at correct paths)
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/packages ./packages
 COPY --from=build /app/apps/api ./apps/api
 COPY --from=build /app/tsconfig.base.json ./tsconfig.base.json
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=build /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=build /app/.npmrc ./.npmrc
 
+# Ensure tsx is resolvable globally for node --import
+RUN npm install -g tsx
+
+# Run Prisma db push on startup if DATABASE_URL is set
 EXPOSE 4000
 
 CMD ["node", "--import", "tsx", "apps/api/src/index.ts"]

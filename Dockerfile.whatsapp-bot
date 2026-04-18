@@ -44,6 +44,9 @@ COPY --from=build /app/tsconfig.base.json ./tsconfig.base.json
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
+# Ensure tsx is resolvable globally
+RUN npm install -g tsx
+
 EXPOSE 4001
 
 CMD ["node", "--import", "tsx", "apps/whatsapp-bot/src/index.ts"]
