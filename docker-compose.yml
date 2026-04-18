@@ -1,14 +1,13 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: trustledger
-      POSTGRES_PASSWORD: trustledger
-      POSTGRES_DB: trustledger
+      POSTGRES_USER: ${POSTGRES_USER:-trustledger}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trustledger}
+      POSTGRES_DB: ${POSTGRES_DB:-trustledger}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -21,6 +20,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
@@ -37,15 +37,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    ports:
-      - "3001:3001"
+    restart: unless-stopped
+    expose:
+      - "4000"
     environment:
       NODE_ENV: production
-      PORT: 3001
-      DATABASE_URL: postgresql://trustledger:trustledger@postgres:5432/trustledger
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-trustledger}:${POSTGRES_PASSWORD:-trustledger}@postgres:5432/${POSTGRES_DB:-trustledger}
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: change-me-in-production
-      SCORE_ENGINE_URL: http://score-engine:8000
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-900}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-604800}
+      SCORE_ENGINE_URL: http://score-engine:5000
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://yourdomain.com}
+      POLYGON_RPC_URL: ${POLYGON_RPC_URL:-https://rpc-amoy.polygon.technology}
+      CHAIN_ID: ${CHAIN_ID:-80002}
     depends_on:
       postgres:
         condition: service_healthy
@@ -58,19 +64,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
+    restart: unless-stopped
     command: ["node", "--import", "tsx", "apps/api/src/queue/workers/index.ts"]
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://trustledger:trustledger@postgres:5432/trustledger
+      DATABASE_URL: postgresql://${POSTGRES_USER:-trustledger}:${POSTGRES_PASSWORD:-trustledger}@postgres:5432/${POSTGRES_DB:-trustledger}
       REDIS_URL: redis://redis:6379
-      SCORE_ENGINE_URL: http://score-engine:8000
-      JWT_SECRET: change-me-in-production
+      SCORE_ENGINE_URL: http://score-engine:5000
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_healthy
-      score-engine:
         condition: service_healthy
     networks:
       - trustledger-net
@@ -79,33 +84,17 @@ services:
     build:
       context: ./apps/score-engine
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    restart: unless-stopped
+    expose:
+      - "5000"
     environment:
       SCORE_ENGINE_HOST: "0.0.0.0"
-      SCORE_ENGINE_PORT: 8000
+      SCORE_ENGINE_PORT: 5000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
-    networks:
-      - trustledger-net
-
-  whatsapp-bot:
-    build:
-      context: .
-      dockerfile: Dockerfile.whatsapp-bot
-    ports:
-      - "3003:3003"
-    environment:
-      NODE_ENV: production
-      PORT: 3003
-      REDIS_URL: redis://redis:6379
-      API_BASE_URL: http://api:3001
-    depends_on:
-      - api
-      - redis
     networks:
       - trustledger-net
 
@@ -113,18 +102,64 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.web
-    ports:
-      - "3000:3000"
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://yourdomain.com}
+    restart: unless-stopped
+    expose:
+      - "3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://api:3001
+      NODE_ENV: production
     depends_on:
       - api
     networks:
       - trustledger-net
 
+  whatsapp-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.whatsapp-bot
+    restart: unless-stopped
+    expose:
+      - "4001"
+    environment:
+      NODE_ENV: production
+      PORT: 4001
+      REDIS_URL: redis://redis:6379
+      API_BASE_URL: http://api:4000
+    depends_on:
+      - api
+      - redis
+    networks:
+      - trustledger-net
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - certbot-data:/var/www/certbot:ro
+    depends_on:
+      - web
+      - api
+    networks:
+      - trustledger-net
+
+  # Certbot for auto-renewing Let's Encrypt SSL
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./nginx/ssl:/etc/letsencrypt
+      - certbot-data:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
 volumes:
   postgres-data:
   redis-data:
+  certbot-data:
 
 networks:
   trustledger-net:
