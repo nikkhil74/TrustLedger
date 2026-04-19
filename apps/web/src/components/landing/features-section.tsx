@@ -76,8 +76,8 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold">
-            Built for <span className="gradient-text">Trust</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-tl-text">
+            Built for <span className="text-tl-primary">Trust</span>
           </h2>
           <p className="mt-4 text-tl-text-secondary max-w-2xl mx-auto">
             A credit scoring platform that respects your privacy while giving

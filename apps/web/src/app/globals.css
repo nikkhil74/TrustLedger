@@ -1,41 +1,42 @@
 @import "tailwindcss";
 
 /* ============================================================
-   TrustLedger Dark Neon Web3 Theme
+   TrustLedger Premium Banking Theme
    ============================================================ */
 
 :root {
-  /* Core palette */
-  --tl-bg-deep: #0A0E1A;
-  --tl-bg-surface: #111827;
-  --tl-bg-card: #1A1F2E;
-  --tl-bg-elevated: #242937;
+  /* Core palette - Premium Dark Slate */
+  --tl-bg-deep: #0B1120;
+  --tl-bg-surface: #0F172A;
+  --tl-bg-card: #1E293B;
+  --tl-bg-elevated: #334155;
 
-  /* Neon accents */
-  --tl-neon-cyan: #00F0FF;
-  --tl-neon-purple: #8B5CF6;
-  --tl-neon-green: #00FF88;
-  --tl-neon-pink: #FF006E;
-  --tl-neon-orange: #FF8800;
+  /* Trust/Banking Accents */
+  --tl-primary-blue: #2563EB;
+  --tl-primary-blue-hover: #1D4ED8;
+  --tl-accent-teal: #0D9488;
+  --tl-accent-emerald: #10B981;
+  --tl-accent-slate: #64748B;
 
   /* Text */
-  --tl-text-primary: #F1F5F9;
-  --tl-text-secondary: #94A3B8;
-  --tl-text-muted: #64748B;
+  --tl-text-primary: #F8FAFC;
+  --tl-text-secondary: #CBD5E1;
+  --tl-text-muted: #94A3B8;
 
   /* Borders */
-  --tl-border: #1E293B;
-  --tl-border-hover: #334155;
+  --tl-border: #334155;
+  --tl-border-hover: #475569;
 
   /* Gradients */
-  --tl-gradient-primary: linear-gradient(135deg, #00F0FF, #8B5CF6);
-  --tl-gradient-score: linear-gradient(135deg, #00FF88, #00F0FF, #8B5CF6);
-  --tl-gradient-hero: linear-gradient(180deg, #0A0E1A 0%, #0F172A 50%, #0A0E1A 100%);
+  --tl-gradient-primary: linear-gradient(135deg, #3B82F6, #2563EB);
+  --tl-gradient-score: linear-gradient(135deg, #10B981, #0EA5E9);
+  --tl-gradient-hero: linear-gradient(180deg, #0B1120 0%, #0F172A 100%);
 
-  /* Glow effects */
-  --tl-glow-cyan: 0 0 20px rgba(0, 240, 255, 0.3), 0 0 60px rgba(0, 240, 255, 0.1);
-  --tl-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1);
-  --tl-glow-green: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.1);
+  /* Shadows */
+  --tl-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --tl-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --tl-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  --tl-shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
 
   /* Fonts */
   --font-sans: var(--font-geist-sans);
@@ -47,11 +48,11 @@
   --color-tl-surface: var(--tl-bg-surface);
   --color-tl-card: var(--tl-bg-card);
   --color-tl-elevated: var(--tl-bg-elevated);
-  --color-tl-cyan: var(--tl-neon-cyan);
-  --color-tl-purple: var(--tl-neon-purple);
-  --color-tl-green: var(--tl-neon-green);
-  --color-tl-pink: var(--tl-neon-pink);
-  --color-tl-orange: var(--tl-neon-orange);
+  --color-tl-primary: var(--tl-primary-blue);
+  --color-tl-primary-hover: var(--tl-primary-blue-hover);
+  --color-tl-teal: var(--tl-accent-teal);
+  --color-tl-emerald: var(--tl-accent-emerald);
+  --color-tl-slate: var(--tl-accent-slate);
   --color-tl-text: var(--tl-text-primary);
   --color-tl-text-secondary: var(--tl-text-secondary);
   --color-tl-text-muted: var(--tl-text-muted);
@@ -84,42 +85,31 @@ body {
 }
 
 /* ============================================================
-   Glass morphism utility
+   Glass morphism utility (Refined for Banking UI)
    ============================================================ */
 
 .glass {
-  background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-card {
-  background: rgba(26, 31, 46, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
+  box-shadow: var(--tl-shadow-md);
 }
-
-/* ============================================================
-   Neon glow utilities
-   ============================================================ */
-
-.glow-cyan { box-shadow: var(--tl-glow-cyan); }
-.glow-purple { box-shadow: var(--tl-glow-purple); }
-.glow-green { box-shadow: var(--tl-glow-green); }
-
-.text-glow-cyan { text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2); }
-.text-glow-purple { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.2); }
-.text-glow-green { text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.2); }
 
 /* ============================================================
    Gradient text
    ============================================================ */
 
 .gradient-text {
-  background: var(--tl-gradient-primary);
+  background: var(--tl-text-primary);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -136,32 +126,17 @@ body {
    Animations
    ============================================================ */
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  50% { transform: translateY(-8px); }
 }
 
 @keyframes grid-fade {
-  0%, 100% { opacity: 0.03; }
-  50% { opacity: 0.06; }
+  0%, 100% { opacity: 0.02; }
+  50% { opacity: 0.04; }
 }
 
-.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-float { animation: float 6s ease-in-out infinite; }
-.animate-shimmer {
-  background-size: 200% 100%;
-  animation: shimmer 3s linear infinite;
-}
 
 /* ============================================================
    Grid background pattern
@@ -169,8 +144,8 @@ body {
 
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
   animation: grid-fade 8s ease-in-out infinite;
 }

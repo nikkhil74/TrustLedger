@@ -12,7 +12,7 @@ interface Particle {
   color: string;
 }
 
-const COLORS = ['#00F0FF', '#8B5CF6', '#00FF88'];
+const COLORS = ['#2563EB', '#3B82F6', '#64748B'];
 
 export function ParticleField({ count = 40 }: { count?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -76,7 +76,7 @@ export function ParticleField({ count = 40 }: { count?: number }) {
             ctx!.moveTo(particles[i].x, particles[i].y);
             ctx!.lineTo(particles[j].x, particles[j].y);
             ctx!.strokeStyle = particles[i].color;
-            ctx!.globalAlpha = (1 - dist / 150) * 0.08;
+            ctx!.globalAlpha = (1 - dist / 150) * 0.03;
             ctx!.lineWidth = 0.5;
             ctx!.stroke();
           }

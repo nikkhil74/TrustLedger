@@ -9,6 +9,7 @@ import { ConnectWallet } from '@/components/web3/connect-wallet';
 import { useAuth } from '@/providers/auth-provider';
 import { useAccount } from 'wagmi';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,11 +22,11 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-tl-cyan to-tl-purple flex items-center justify-center">
-              <span className="text-tl-deep font-bold text-sm">TL</span>
+            <div className="h-8 w-8 rounded-lg bg-tl-primary flex items-center justify-center shadow-sm">
+              <span className="text-white font-bold text-sm">TL</span>
             </div>
-            <span className="text-lg font-bold text-tl-text">
-              Trust<span className="text-tl-cyan">Ledger</span>
+            <span className="text-lg font-bold text-tl-text tracking-tight">
+              Trust<span className="text-tl-primary">Ledger</span>
             </span>
           </Link>
 
@@ -35,7 +36,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-tl-text-secondary hover:text-tl-cyan transition-colors"
+                className="text-sm font-medium text-tl-text-secondary hover:text-tl-text transition-colors"
               >
                 {link.label}
               </Link>
@@ -43,20 +44,17 @@ export function Navbar() {
           </div>
 
           {/* Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
             <ConnectWallet />
             {isConnected && isLoading && (
-              <div className="flex items-center gap-1.5 text-xs text-tl-text-muted">
-                <Loader2 size={12} className="animate-spin" />
-                Signing in...
+              <div className="flex items-center gap-2 text-sm text-tl-text-muted">
+                <Loader2 size={14} className="animate-spin" />
+                <span>Securely signing in...</span>
               </div>
             )}
             {isAuthenticated && (
-              <Link
-                href="/dashboard"
-                className="px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-tl-cyan to-tl-purple text-tl-deep hover:brightness-110 transition-all"
-              >
-                Dashboard
+              <Link href="/dashboard">
+                <Button size="sm">Dashboard</Button>
               </Link>
             )}
           </div>
@@ -87,21 +85,21 @@ export function Navbar() {
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'block text-sm text-tl-text-secondary hover:text-tl-cyan transition-colors py-2',
+                    'block text-sm font-medium text-tl-text-secondary hover:text-tl-text transition-colors py-2',
                   )}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-3 border-t border-tl-border space-y-3">
+              <div className="pt-4 pb-2 border-t border-tl-border space-y-4">
                 <ConnectWallet />
                 {isAuthenticated && (
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileOpen(false)}
-                    className="block text-center px-4 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-tl-cyan to-tl-purple text-tl-deep"
+                    className="block w-full"
                   >
-                    Dashboard
+                    <Button className="w-full">Dashboard</Button>
                   </Link>
                 )}
               </div>

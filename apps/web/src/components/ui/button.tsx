@@ -7,20 +7,20 @@ type Size = 'sm' | 'md' | 'lg';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
-  glow?: boolean;
+  glow?: boolean; // Kept for backward compatibility, but won't do anything neon anymore
 }
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    'bg-gradient-to-r from-tl-cyan to-tl-purple text-tl-deep font-semibold hover:brightness-110',
+    'bg-tl-primary text-white font-medium shadow-sm hover:bg-tl-primary-hover active:scale-[0.98]',
   secondary:
-    'bg-tl-card text-tl-text border border-tl-border hover:border-tl-border-hover hover:bg-tl-elevated',
+    'bg-tl-card text-tl-text border border-tl-border hover:border-tl-border-hover hover:bg-tl-elevated active:scale-[0.98]',
   outline:
-    'bg-transparent text-tl-cyan border border-tl-cyan/40 hover:bg-tl-cyan/10',
+    'bg-transparent text-tl-text border border-tl-border hover:bg-tl-surface active:scale-[0.98]',
   ghost:
-    'bg-transparent text-tl-text-secondary hover:text-tl-text hover:bg-white/5',
+    'bg-transparent text-tl-text-secondary hover:text-tl-text hover:bg-tl-surface active:scale-[0.98]',
   danger:
-    'bg-tl-pink/10 text-tl-pink border border-tl-pink/30 hover:bg-tl-pink/20',
+    'bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500/20 active:scale-[0.98]',
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -39,7 +39,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         'disabled:opacity-50 disabled:cursor-not-allowed',
         variantStyles[variant],
         sizeStyles[size],
-        glow && variant === 'primary' && 'glow-cyan',
         className,
       )}
       {...props}

@@ -42,8 +42,8 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold">
-            How It <span className="gradient-text">Works</span>
+          <h2 className="text-3xl font-bold text-tl-text">
+            How It <span className="text-tl-primary">Works</span>
           </h2>
           <p className="mt-4 text-tl-text-secondary max-w-xl mx-auto">
             Four simple steps to your portable, privacy-first credit score.
@@ -52,7 +52,7 @@ export function HowItWorksSection() {
 
         <div className="relative">
           {/* Vertical line */}
-          <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-tl-cyan via-tl-purple to-tl-green hidden md:block" />
+          <div className="absolute left-8 top-0 bottom-0 w-px bg-tl-border hidden md:block" />
 
           <div className="space-y-12">
             {steps.map((s, i) => (
@@ -66,7 +66,7 @@ export function HowItWorksSection() {
               >
                 {/* Number circle */}
                 <div
-                  className={`relative z-10 flex-shrink-0 h-16 w-16 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center`}
+                  className={`relative z-10 flex-shrink-0 h-16 w-16 rounded-2xl bg-tl-surface border border-tl-border flex items-center justify-center shadow-sm`}
                 >
                   <span className="text-tl-deep font-bold text-lg">
                     {s.step}

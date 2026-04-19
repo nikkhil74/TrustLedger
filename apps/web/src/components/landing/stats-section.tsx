@@ -31,7 +31,7 @@ function AnimatedNumber({
   }, [count, value]);
 
   return (
-    <span className="text-4xl sm:text-5xl font-bold gradient-text">
+    <span className="text-4xl sm:text-5xl font-bold text-tl-primary">
       <motion.span>{rounded}</motion.span>
       {suffix}
     </span>

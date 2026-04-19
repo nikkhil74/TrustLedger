@@ -2,23 +2,20 @@ import { type HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  glow?: 'cyan' | 'purple' | 'green' | 'none';
+  glow?: 'cyan' | 'purple' | 'green' | 'none'; // Kept for backwards compatibility
   glass?: boolean;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, glow = 'none', glass, children, ...props }, ref) => (
+  ({ className, glow, glass, children, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'rounded-2xl border border-tl-border p-6 transition-all duration-300',
+        'rounded-2xl border border-tl-border p-6 transition-all duration-300 shadow-sm',
         glass
           ? 'glass-card'
           : 'bg-tl-card',
-        glow === 'cyan' && 'glow-cyan border-tl-cyan/20',
-        glow === 'purple' && 'glow-purple border-tl-purple/20',
-        glow === 'green' && 'glow-green border-tl-green/20',
-        'hover:border-tl-border-hover',
+        'hover:shadow-md hover:border-tl-border-hover',
         className,
       )}
       {...props}
@@ -42,7 +39,7 @@ export function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-lg font-semibold text-tl-text', className)}
+      className={cn('text-lg font-semibold text-tl-text tracking-tight', className)}
       {...props}
     />
   );
