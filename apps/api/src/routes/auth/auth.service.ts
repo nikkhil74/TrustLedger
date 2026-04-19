@@ -112,4 +112,26 @@ export class AuthService {
 
     return { verified: true, message: 'KYC verification successful' };
   }
+
+  static async disconnectKyc(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw AppError.unauthorized('User not found');
+    }
+
+    if (user.kycStatus !== KYCStatus.VERIFIED) {
+      throw AppError.validation('KYC is not verified');
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        kycStatus: KYCStatus.PENDING,
+        aadhaarHash: createHash('sha256').update(`pending_${user.walletAddress}`).digest('hex'),
+      },
+    });
+
+    return { disconnected: true, message: 'KYC has been reset' };
+  }
 }

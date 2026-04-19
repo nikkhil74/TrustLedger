@@ -40,4 +40,11 @@ export async function authRoutes(fastify: FastifyInstance) {
     { preHandler: [authenticate, validate(verifyKycSchema)] },
     AuthController.verifyKyc,
   );
+
+  // Disconnect KYC — reset to PENDING (demo/judging)
+  fastify.post(
+    '/auth/disconnect-kyc',
+    { preHandler: [authenticate] },
+    AuthController.disconnectKyc,
+  );
 }

@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Loader2, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Loader2, CheckCircle, AlertCircle, ArrowRight, ShieldOff } from 'lucide-react';
 import { useAuth } from '@/hooks';
-import { useInitiateKyc, useVerifyKyc } from '@/hooks';
+import { useInitiateKyc, useVerifyKyc, useDisconnectKyc } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 type Step = 'aadhaar' | 'otp' | 'success';
@@ -19,6 +19,7 @@ export default function KycPage() {
 
   const initiateKyc = useInitiateKyc();
   const verifyKyc = useVerifyKyc();
+  const disconnectKyc = useDisconnectKyc();
 
   // Already verified
   if (user?.kycStatus === 'VERIFIED') {
@@ -31,9 +32,23 @@ export default function KycPage() {
         <div className="rounded-2xl border border-tl-green/30 bg-tl-green/5 p-8 text-center">
           <CheckCircle className="h-16 w-16 text-tl-green mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-tl-text mb-2">KYC Verified</h2>
-          <p className="text-tl-text-secondary">
+          <p className="text-tl-text-secondary mb-6">
             Your identity has been successfully verified. You have full access to all TrustLedger features.
           </p>
+          <button
+            onClick={() => disconnectKyc.mutateAsync()}
+            disabled={disconnectKyc.isPending}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border border-tl-pink/30 text-tl-pink hover:bg-tl-pink/10 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {disconnectKyc.isPending ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <>
+                <ShieldOff size={16} />
+                Disconnect KYC (Demo)
+              </>
+            )}
+          </button>
         </div>
       </motion.div>
     );
@@ -262,6 +277,22 @@ export default function KycPage() {
             Go to Dashboard
             <ArrowRight size={16} />
           </a>
+          <div className="mt-4">
+            <button
+              onClick={() => disconnectKyc.mutateAsync()}
+              disabled={disconnectKyc.isPending}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border border-tl-pink/30 text-tl-pink hover:bg-tl-pink/10 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {disconnectKyc.isPending ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <>
+                  <ShieldOff size={16} />
+                  Disconnect KYC (Demo)
+                </>
+              )}
+            </button>
+          </div>
         </div>
       )}
     </motion.div>

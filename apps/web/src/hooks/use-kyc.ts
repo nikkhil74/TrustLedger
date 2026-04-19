@@ -14,6 +14,11 @@ interface VerifyKycResult {
   message: string;
 }
 
+interface DisconnectKycResult {
+  disconnected: boolean;
+  message: string;
+}
+
 export function useInitiateKyc() {
   return useMutation({
     mutationFn: (aadhaarNumber: string) =>
@@ -27,6 +32,18 @@ export function useVerifyKyc() {
   return useMutation({
     mutationFn: (input: { otp: string; requestId: string }) =>
       apiClient.post<VerifyKycResult>('/auth/verify-kyc', input),
+    onSuccess: () => {
+      refreshUser();
+    },
+  });
+}
+
+export function useDisconnectKyc() {
+  const { refreshUser } = useAuth();
+
+  return useMutation({
+    mutationFn: () =>
+      apiClient.post<DisconnectKycResult>('/auth/disconnect-kyc'),
     onSuccess: () => {
       refreshUser();
     },

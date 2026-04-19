@@ -52,4 +52,10 @@ export class AuthController {
     const result = await AuthService.verifyKyc(user.sub, otp, requestId);
     return reply.send({ success: true, data: result });
   }
+
+  static async disconnectKyc(request: FastifyRequest, reply: FastifyReply) {
+    const user = (request as unknown as Record<string, { sub: string }>).user;
+    const result = await AuthService.disconnectKyc(user.sub);
+    return reply.send({ success: true, data: result });
+  }
 }

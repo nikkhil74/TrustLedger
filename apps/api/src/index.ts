@@ -1,3 +1,11 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+// Load .env from project root
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+config({ path: resolve(__dirname, '../../../.env') });
+
 import { buildServer } from './server.js';
 import { env } from './config/env.js';
 import { initRedis } from './config/redis.js';

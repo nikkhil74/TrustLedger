@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -72,8 +72,8 @@ model DataConsent {
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   aaHandle    String
   consentId   String        @unique
-  dataTypes   String[]
-  fiTypes     String[]
+  dataTypes   Json          @default("[]")
+  fiTypes     Json          @default("[]")
   status      ConsentStatus @default(ACTIVE)
   grantedAt   DateTime      @default(now())
   expiresAt   DateTime
@@ -98,7 +98,7 @@ model LenderAPIKey {
   id          String   @id @default(uuid())
   lenderName  String
   apiKey      String   @unique
-  permissions String[] // ["SCORE_READ", "ZK_VERIFY"]
+  permissions Json     @default("[]") // ["SCORE_READ", "ZK_VERIFY"]
   isActive    Boolean  @default(true)
   rateLimit   Int      @default(100) // requests per minute
   lastUsedAt  DateTime?

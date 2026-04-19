@@ -10,4 +10,4 @@ export { useBehaviorTokens } from './use-behavior-tokens';
 export type { BehaviorToken } from './use-behavior-tokens';
 export { useComputeScore } from './use-compute-score';
 export { useJobStatus } from './use-job-status';
-export { useInitiateKyc, useVerifyKyc } from './use-kyc';
+export { useInitiateKyc, useVerifyKyc, useDisconnectKyc } from './use-kyc';
